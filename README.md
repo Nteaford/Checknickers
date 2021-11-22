@@ -41,7 +41,7 @@ Logic Order:
  King Token Split                   
 * Listen to token click -> if tkn class = (example 'red') !=== turnCheck (redTurn), click unavailable)
     * Look at where you are (currentSquare = idx) (Are you in a restricted space [edge]?) limitMove : !limitMove
-    * Determine potential move spaces using functionMOVECALCULATOR -- output = (moveSpaceOption1 and moveSpaceOption2)
+    * Determine potential move spaces using functionMOVECALCULATOR --> output = (moveSpaceOption1 and moveSpaceOption2)
         * Is your moveSpaceOption1 unnoccupied?  ----> moveSpaceOption1 is AVAILABLE
         * Is your moveSpaceOption1 occupied by a token with the same class? (token moving class = 'black' and occupied square token class = 'black' ----> moveSpaceOption1 is UNAVAILABLE 
         * Is your moveSpaceOption1 occupied by a token with a different class? (token moving class = 'black' and occupied square token class = 'red' 
@@ -50,13 +50,14 @@ Logic Order:
                 *if no - continue
             
         *if moveSpaceOption1 !=== restricted space
-             *  let jumpSpaceOption = (currentSquare -19) [for black's turn]) 
+             *  let jumpSpaceOption = (currentSquare -18) [for black's turn]) 
                 * is jumpSpaceOption occupied?
                     * Yes -> Negate moveSpaceOption1
                     * No -> set moveSpaceOption1 to jumpSpaceOption and begin function DOUBLE JUMP CHECK
 
         * function DOUBLEJUMPCHECK will set currentSpace = moveOption1 and run function MOVECALCULATOR again
-
+        currentSpaceReal
+        currentSpacePotential
 
 
 

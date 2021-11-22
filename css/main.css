@@ -1,0 +1,44 @@
+.centered {
+    text-align: center;
+}
+
+.game--section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.game--container {
+    display: grid;
+    height: 415px;
+    width: 415px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns:1fr 1fr 1fr 1fr, 1fr 1fr 1fr 1fr;
+    border: 2px solid black; 
+
+}
+
+.checkerbox {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    line-height: 50px;
+    font-size: 50px;
+    
+}
+
+.white {
+    background-color: white;
+
+}
+
+.grey  {
+    background-color: grey;
+}
+.red--token {
+background-color: red;
+border: 1px solid black;
+border-radius: 50px;
+padding: 3px;
+
+}
