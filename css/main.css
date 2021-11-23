@@ -19,11 +19,14 @@
 }
 
 .checkerbox {
+    display: flex;
     width: 50px;
     height: 50px;
     border: 1px solid black;
     line-height: 50px;
     font-size: 50px;
+    justify-content: center;
+    align-items: center;
     
 }
 
@@ -37,8 +40,24 @@
 }
 .red--token {
 background-color: red;
-border: 1px solid black;
+border: 2px solid darkgray;
 border-radius: 50px;
-padding: 3px;
+padding: 1px;
+height: 25px;
+width: 25px;
 
+}
+
+.black--token {
+    background-color: black;
+    border: 2px solid darkgrey;
+    border-radius: 50px;
+    padding: 1px;
+    height: 25px;
+    width: 25px;
+    
+}
+
+.potentialMove {
+    background-color: yellow;
 }
