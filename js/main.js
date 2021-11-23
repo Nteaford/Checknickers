@@ -209,7 +209,7 @@ function moveCalculator(e) {
     
     //determine moveOptions
     moveOption1 = moveLookup[tokenTeamSelected][tokenRankSelected][moveOption1];
-    moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected][moveOption2];
+    moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected];
     console.log(typeof currentSpace);
     console.log(moveOption1);
     console.log(moveOption2);
