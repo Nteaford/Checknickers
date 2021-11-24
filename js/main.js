@@ -21,7 +21,8 @@ const redTurnLookup = {
 
 /*----- event listeners -----*/
 document.querySelector(".game--container").addEventListener('click', moveCalculator);
-document.querySelector("p").addEventListener('click', moveToken);
+document.querySelector(".game--container").addEventListener('click', moveToken);
+
 
 
 /*----- functions -----*/
@@ -59,9 +60,7 @@ function init () {
 function moveCalculator(e) {
     //reset checkerboard squares to grey
     let x = document.querySelectorAll(".potentialMove");
-    console.log(x);
     x.forEach(checkerbox => checkerbox.classList.remove("potentialMove"));
-    console.log(x);
     //set current token type
     tokenRankSelected = tokenTypeLookup(e);
     //confirm that this token is allowed to move
@@ -265,12 +264,8 @@ function moveCalculator(e) {
     document.getElementById(moveOption2Display).classList.add("potentialMove");
     };
 
-   
-
-
-
-
-}
+    document.getElementById(".game--container").addEventListener('click', moveToken);
+};
 
 function tokenTypeLookup (e) { 
     tokenTypeSelected = playerTurn.tokenUsed; 
@@ -278,7 +273,7 @@ function tokenTypeLookup (e) {
     tokenRankHalfway = tokenRankHalfway.split(" ");
     return tokenRank = tokenRankHalfway[1];
     // console.log(tokenRank);
-
+    
 }
 
 function turnCheck (e) {
@@ -286,17 +281,23 @@ function turnCheck (e) {
     let regex = new RegExp(playerTurn.tokenUsed);
     let match = tokenSelected.match(regex);
     // console.log(match);
-
+    
     if (match) {
         return playerTurn.tokenUsed 
-      } else  
-      alert("Wait your turn!");
-    };
-
+    }
+    alert("Wait your turn!");
+};
 
 function moveToken (e) {
-    console.log(e.target);
+   let movingToken = e.target.getAttribute("id");
+
+    console.log(movingToken); 
+    console.log(moveOption1);
+    console.log(moveOption2);
+    console.log(currentSpace);
+
 };
+
 
 
 
