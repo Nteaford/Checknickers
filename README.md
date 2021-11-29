@@ -30,7 +30,7 @@ Logic Order:
                 *if no - continue
             
         *if moveSpaceOption1 !=== restricted space
-             *  let jumpSpaceOption = (currentSquare -19) [for black's turn]) 
+             *  let jumpSpaceOption = (currentSquare -18) [for black's turn]) 
                 * is jumpSpaceOption occupied?
                     * Yes -> Negate moveSpaceOption1
                     * No -> set moveSpaceOption1 to jumpSpaceOption and begin function DOUBLE JUMP CHECK
