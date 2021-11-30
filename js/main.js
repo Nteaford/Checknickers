@@ -1,5 +1,5 @@
 /*----- app's state (variables) -----*/
-let playerTurn, currentSelection, currentSpace, checkSpace, newSpace, jumpCheckSpace, enemySquare1, enemySquare2, enemySquare3, enemySquare4, moveOption1, moveOption2, moveOption3, moveOption4, tokenTeamSelected, tokenRankSelected, tokenId;
+let playerTurn, currentSelection, currentSpace, checkSpace, newSpace, jumpCheckSpace, enemySquare1, enemySquare2, enemySquare3, enemySquare4, moveOption1, moveOption2, moveOption3, moveOption4, tokenTeamSelected, tokenRankSelected, tokenId, jumpedCheck;
 
 
 /*----- constants -----*/
@@ -14,11 +14,17 @@ const redTurnLookup = {
     opponentToken: "black--token",
 }
 
+const restrictedSquareAlert = [7, 8, 23, 24, 39, 40, 55, 56]
 
+const upgradeSquares = {
+    "black--token": [1, 3, 5, 7],
+    "red--token": [56, 58, 60, 62],
+}
 
 
 /*----- cached element references -----*/
-
+let blackTurnTextEl = document.querySelector(".black-turn-text");
+let redTurnTextEl = document.querySelector(".red-turn-text");
 
 
 /*----- event listeners -----*/
@@ -28,19 +34,28 @@ document.querySelector(".game--container").addEventListener('click', moveCalcula
 
 
 /*----- functions -----*/
-
-init();
-
 function init() {
     playerTurn = blkTurnLookup;
+    redTurnTextEl.style.color = "grey";
+    blackTurnTextEl.style.color = "black";
     currentSpace = 0;
 
     gameState = ["", "red--token", "", "red--token", "", "red--token", "", "red--token", "red--token", "", "red--token", "", "red--token", "", "red--token", "", "", "red--token", "", "red--token", "", "red--token", "", "red--token", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "black--token", "", "black--token", "", "black--token", "", "black--token", "", "", "black--token", "", "black--token", "", "black--token", "", "black--token", "black--token", "", "black--token", "", "black--token", "", "black--token", ""];
 
+    render();
 };
+function render() {
+}
+
+function determineMoveOptions() {
+    moveOption1 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption1;
+    moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption2;
+    moveOption3 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption3;
+    moveOption4 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption4;
+}
 
 
-
+init();
 
 function moveCalculator(e) {
     //reset checkerboard squares to grey
@@ -69,14 +84,12 @@ function moveCalculator(e) {
 
 
 
-    determineMoveOptions();
+
+
+
+
     //determine moveOptions
-    function determineMoveOptions() {
-        moveOption1 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption1;
-        moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption2;
-        moveOption3 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption3;
-        moveOption4 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption4;
-    }
+    determineMoveOptions();
     // console.log(`MC: you are at ${checkSpace}`);
     // console.log(`MC: you can move to ${moveOption1}`);
     // console.log(`MC: you can move2 to ${moveOption2}`);
@@ -91,7 +104,7 @@ function moveCalculator(e) {
     //NEED TO SET GUARDRAILS ON JUMPING INTO CORNERS
 
     function jumpCheck() {
-        if (gameState[moveOption1] === playerTurn.opponentToken) {
+        if ((gameState[moveOption1] === playerTurn.opponentToken) && (!restrictedSquareAlert.some(x => x === moveOption1))) {
             enemySquare1 = moveOption1;
             checkSpace = moveOption1;
 
@@ -99,11 +112,12 @@ function moveCalculator(e) {
 
             jumpCheckSpace = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption1;
 
-            if (gameState[jumpCheckSpace] !== "") {
+            if ((gameState[jumpCheckSpace] !== "")) {
                 moveOption1 = null;
             } else {
                 moveOption1 = jumpCheckSpace;
             }
+
         };
         if (gameState[moveOption2] === playerTurn.opponentToken) {
             enemySquare2 = moveOption2;
@@ -150,10 +164,10 @@ function moveCalculator(e) {
     };
 
 
-    // console.log(`This is checkSpace ${checkSpace}`);
-    // console.log(`This is moveOption1 ${moveOption1}`);
+    console.log(`This is checkSpace ${checkSpace}`);
+    console.log(`This is moveOption1 ${moveOption1}`);
 
-    // console.log(`This is jumpCheckSpace ${jumpCheckSpace}`);
+    console.log(`This is jumpCheckSpace ${jumpCheckSpace}`);
 
 
     determineMoveRestrictions();
@@ -208,22 +222,22 @@ function moveCalculator(e) {
     displayMoveOptions();
     //display move options on board
     function displayMoveOptions() {
-    if (moveOption1 !== null) {
-        let moveOption1Display = moveOption1.toString();
-        document.getElementById(moveOption1Display).classList.add("potentialMove");
-    };
-    if (moveOption2 !== null) {
-        let moveOption2Display = moveOption2.toString();
-        document.getElementById(moveOption2Display).classList.add("potentialMove");
-    };
-    if (moveOption3 !== null) {
-        let moveOption3Display = moveOption3.toString();
-        document.getElementById(moveOption3Display).classList.add("potentialMove");
-    };
-    if (moveOption4 !== null) {
-        let moveOption4Display = moveOption4.toString();
-        document.getElementById(moveOption4Display).classList.add("potentialMove");
-    };
+        if (moveOption1 !== null) {
+            let moveOption1Display = moveOption1.toString();
+            document.getElementById(moveOption1Display).classList.add("potentialMove");
+        };
+        if (moveOption2 !== null) {
+            let moveOption2Display = moveOption2.toString();
+            document.getElementById(moveOption2Display).classList.add("potentialMove");
+        };
+        if (moveOption3 !== null) {
+            let moveOption3Display = moveOption3.toString();
+            document.getElementById(moveOption3Display).classList.add("potentialMove");
+        };
+        if (moveOption4 !== null) {
+            let moveOption4Display = moveOption4.toString();
+            document.getElementById(moveOption4Display).classList.add("potentialMove");
+        };
     };
 
     // jumpCheck();
@@ -492,7 +506,7 @@ function moveToken(e) {
 
     let movingToken = currentSpace;
     console.log(e.target.id);
-
+    //removal of old moving piece
     let oldSpaceDom = document.getElementById(tokenId);
 
     console.log(oldSpaceDom);
@@ -500,19 +514,24 @@ function moveToken(e) {
     gameState[currentSpace] = "";
 
 
-
-
-
+    //addition of new moving piece
     let newSpaceDom = document.createElement("p");
-    newSpaceDom.classList.add(tokenTeamSelected, tokenRankSelected);
-    newSpaceDom.setAttribute("id", tokenId);
-
-    let newSpaceDomLocator = e.target;
-
-    newSpaceDomLocator.appendChild(newSpaceDom);
-
     newSpace = parseInt(e.target.id);
     gameState[newSpace] = playerTurn.tokenUsed;
+
+    if (upgradeSquares[playerTurn.tokenUsed].some(x => x === newSpace)) {
+        newSpaceDom.classList.add(tokenTeamSelected, "king");
+        newSpaceDom.setAttribute("id", tokenId);
+    } else {
+        newSpaceDom.classList.add(tokenTeamSelected, tokenRankSelected);
+        newSpaceDom.setAttribute("id", tokenId);
+    };
+
+
+
+    let newSpaceDomLocator = e.target;
+    newSpaceDomLocator.appendChild(newSpaceDom);
+
 
     console.log(newSpace);
     console.log(jumpCheckSpace);
@@ -526,6 +545,7 @@ function moveToken(e) {
         enemySpaceDom.removeChild(enemySpaceDom.lastChild);
         console.log(enemySpaceDom.childNodes);
         gameState[enemySquare1] = "";
+        jumpedCheck = true;
     }
     else if ((newSpace === jumpCheckSpace) && (newSpace === moveOption2)) {
         let enemySquare2Fix = enemySquare2.toString();
@@ -534,6 +554,7 @@ function moveToken(e) {
         enemySpaceDom.removeChild(enemySpaceDom.lastChild);
         console.log(enemySpaceDom.childNodes);
         gameState[enemySquare2] = "";
+        jumpedCheck = true;
     }
     else if ((newSpace === jumpCheckSpace) && (newSpace === moveOption3)) {
         let enemySquare3Fix = enemySquare3.toString();
@@ -542,6 +563,7 @@ function moveToken(e) {
         enemySpaceDom.removeChild(enemySpaceDom.lastChild);
         console.log(enemySpaceDom.childNodes);
         gameState[enemySquare3] = "";
+        jumpedCheck = true;
     }
     else if ((newSpace === jumpCheckSpace) && (newSpace === moveOption4)) {
         let enemySquare4Fix = enemySquare4.toString();
@@ -550,18 +572,39 @@ function moveToken(e) {
         enemySpaceDom.removeChild(enemySpaceDom.lastChild);
         console.log(enemySpaceDom.childNodes);
         gameState[enemySquare4] = "";
+        jumpedCheck = true;
+    } else jumpedCheck = false;
+
+
+    if (jumpedCheck = true) {
+        currentSpace = newSpace;
+        checkSpace = currentSpace;
+        moveLookup = moveLookupFunction(checkSpace);
+        determineMoveOptions();
+
+
     };
 
+    function doubleJump() {
+        moveCalculator(currentSpace);
+ 
+    }
 
 
-
-
-    if (playerTurn === blkTurnLookup) { playerTurn = redTurnLookup } else {
-        playerTurn = blkTurnLookup
+    //turn switch
+    if (playerTurn === blkTurnLookup) {
+        playerTurn = redTurnLookup;
+        redTurnTextEl.style.color = "red";
+        blackTurnTextEl.style.color = "grey";
+    } else {
+        playerTurn = blkTurnLookup;
+        redTurnTextEl.style.color = "grey";
+        blackTurnTextEl.style.color = "black";
     };
-
+    //reset variables
     tokenTrackingReset();
 
+    //remove event listeners
     const moveEventRemove = document.querySelectorAll(".potentialMove");
     for (let i = 0; i < moveEventRemove.length; i++) {
         moveEventRemove[i].removeEventListener("click", moveToken)
@@ -587,21 +630,3 @@ function tokenTrackingReset() {
     moveOption4 = "";
 
 }
-
-
-// function getClass (e) {
-//     let blah = e.target.getAttribute("class");
-//     console.log(blah);
-// }
-
-
-// function locationTest (e) {
-//     currentSpace = e.target.parentElement.getAttribute("data-cell-index");
-//     console.log(currentSpace);
-// }
-
-
-// const moveCalcSetup = document.querySelectorAll(playerTurn.tokenUsed);
-// for (let i = 0; i < moveCalcSetup.length; i++) {
-//     moveCalcSetup[i].addEventListener("click", moveCalculator)
-//     };

@@ -60,6 +60,21 @@ width: 25px;
     
 }
 
+.king {
+    border: rgb(255, 153, 0) solid 4px;
+}
+
+
 .potentialMove {
     background-color: yellow;
+}
+.turnSection {
+    display:inline-flex;
+    font-size: 38px;
+    margin:auto;
+}
+
+.black-turn-text, .red-turn-text {
+    justify-items: auto;
+    align-items: space-between;
 }
