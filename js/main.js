@@ -1,5 +1,5 @@
 /*----- app's state (variables) -----*/
-let playerTurn, currentSelection, currentSpace, checkSpace, newSpace, jumpCheckSpace, enemySquare1, enemySquare2, enemySquare3, enemySquare4, moveOption1, moveOption2, moveOption3, moveOption4, tokenTeamSelected, tokenRankSelected, tokenId, jumpedCheck;
+let playerTurn, currentSelection, currentSpace, checkSpace, newSpace, jumpCheckSpace, enemySquare1, enemySquare2, enemySquare3, enemySquare4, moveOption1, moveOption2, moveOption3, moveOption4, jumpOption1, jumpOption2, jumpOption3, jumpOption4, tokenTeamSelected, tokenRankSelected, tokenId, jumpedCheck;
 
 
 /*----- constants -----*/
@@ -63,19 +63,19 @@ function moveCalculator(e) {
     currentSpace = parseInt(currentSpace = e.target.parentElement.getAttribute("id"));
     //set checkSpace variable;
     checkSpace = currentSpace;
-    
+
     //collect tokenId
     tokenId = e.target.getAttribute(("id"));
     // console.log(tokenId);
-    
+
     //create moveLookup Object
     let moveLookup = moveLookupFunction(checkSpace);
-    
+
     //Player Turn Check
     if (tokenTeamSelected !== playerTurn.tokenUsed) {
         return;
     };
-    
+
     //determine moveOptions
     determineMoveOptions();
     // console.log(`MC: you are at ${checkSpace}`);
@@ -85,87 +85,79 @@ function moveCalculator(e) {
         moveOption3 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption3;
         moveOption4 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption4;
     }
-    // console.log(`MC: you can move to ${moveOption1}`);
-    // console.log(`MC: you can move2 to ${moveOption2}`);
-    // console.log(`MC: you can move3 to ${moveOption3}`);
-    // console.log(`MC: you can move4 to ${moveOption4}`);
-    // console.log(moveLookup[tokenTeamSelected][tokenRankSelected]);
-
+    
+    
+    //determine movement restrictions
+    determineMoveRestrictions();
     //Jump Checking
-
     jumpCheck();
+    
 
-    //NEED TO SET GUARDRAILS ON JUMPING INTO CORNERS
 
     function jumpCheck() {
-        if ((gameState[moveOption1] === playerTurn.opponentToken) && (!restrictedSquareAlert.some(x => x === moveOption1))) {
-            enemySquare1 = moveOption1;
-            checkSpace = moveOption1;
+        if (gameState[moveOption1] === playerTurn.opponentToken) {
+            let jumpLookup = jumpLookupFunction(checkSpace);
+            jumpOption1 = jumpLookup[tokenTeamSelected][tokenRankSelected].jumpOption1;
 
-            moveLookup = moveLookupFunction(checkSpace);
-
-            jumpCheckSpace = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption1;
-
-            if ((gameState[jumpCheckSpace] !== "")) {
+            if ((gameState[jumpOption1] !== "")) {
                 moveOption1 = null;
             } else {
-                moveOption1 = jumpCheckSpace;
+                enemySquare1 = moveOption1;
+                determineJumpRestrictions();
+                moveOption1 = jumpOption1;
             }
-
-        };
+        }
         if (gameState[moveOption2] === playerTurn.opponentToken) {
-            enemySquare2 = moveOption2;
-            checkSpace = moveOption2;
-
-            moveLookup = moveLookupFunction(checkSpace);
-
-            jumpCheckSpace = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption2;
-
-            if (gameState[jumpCheckSpace] !== "") {
+            let jumpLookup = jumpLookupFunction(checkSpace);
+            jumpOption2 = jumpLookup[tokenTeamSelected][tokenRankSelected].jumpOption2;
+            
+            if ((gameState[jumpOption2] !== "")) {
                 moveOption2 = null;
             } else {
-                moveOption2 = jumpCheckSpace;
+                enemySquare2 = moveOption2;
+                determineJumpRestrictions();
+                moveOption2 = jumpOption2;
             }
-        };
+        }
         if (gameState[moveOption3] === playerTurn.opponentToken) {
-            enemySquare3 = moveOption3;
-            checkSpace = moveOption3;
-
-            moveLookup = moveLookupFunction(checkSpace);
-
-            jumpCheckSpace = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption3;
-
-            if (gameState[jumpCheckSpace] !== "") {
+            let jumpLookup = jumpLookupFunction(checkSpace);
+            jumpOption3 = jumpLookup[tokenTeamSelected][tokenRankSelected].jumpOption3;
+            
+            if ((gameState[jumpOption3] !== "")) {
                 moveOption3 = null;
             } else {
-                moveOption3 = jumpCheckSpace;
+                enemySquare3 = moveOption3;
+                determineJumpRestrictions();
+                moveOption3 = jumpOption3;
             }
-        };
+        }
         if (gameState[moveOption4] === playerTurn.opponentToken) {
-            enemySquare4 = moveOption4;
-            checkSpace = moveOption4;
-
-            moveLookup = moveLookupFunction(checkSpace);
-
-            jumpCheckSpace = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption4;
-
-            if (gameState[jumpCheckSpace] !== "") {
+            let jumpLookup = jumpLookupFunction(checkSpace);
+            jumpOption4 = jumpLookup[tokenTeamSelected][tokenRankSelected].jumpOption4;
+            
+            if ((gameState[jumpOption4] !== "")) {
                 moveOption4 = null;
             } else {
-                moveOption4 = jumpCheckSpace;
+                enemySquare4 = moveOption4;
+                determineJumpRestrictions();
+                moveOption4 = jumpOption4;
             }
-        };
+        }
     };
 
 
-    console.log(`This is checkSpace ${checkSpace}`);
-    console.log(`This is moveOption1 ${moveOption1}`);
+    function determineJumpRestrictions() {
+        let jumpLookup = jumpLookupFunction(checkSpace);
+        let restrictedJumpCheck = currentSpace;
+        if (jumpLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedJumpCheck]) {
+            jumpOption1 = jumpLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedJumpCheck].jumpOption1;
+            jumpOption2 = jumpLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedJumpCheck].jumpOption2;
+            jumpOption3 = jumpLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedJumpCheck].jumpOption3;
+            jumpOption4 = jumpLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedJumpCheck].jumpOption4;
 
-    console.log(`This is jumpCheckSpace ${jumpCheckSpace}`);
-
-
-    determineMoveRestrictions();
-    //determine movement restrictions
+        }
+    };
+    
     function determineMoveRestrictions() {
         let restrictedCheck = currentSpace;
         if (moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck]) {
@@ -259,6 +251,7 @@ function tokenTeamLookup(e) {
     // console.log(tokenRank);
 
 }
+
 
 function moveLookupFunction(checkSpace) {
     const moveLookup = {
@@ -492,6 +485,561 @@ function moveLookupFunction(checkSpace) {
     return moveLookup;
 }
 
+function jumpLookupFunction(checkSpace) {
+    const jumpLookup = {
+        "black--token": {
+            soldier: {
+                jumpOption1: (checkSpace - 18),
+                jumpOption2: (checkSpace - 14),
+                jumpOption3: null,
+                jumpOption4: null,
+                restrictedSquares: {
+                    8: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    10: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    12: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    14: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    17: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+
+                    },
+                    23: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    24: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    30: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    33: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    39: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    40: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    46: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    49: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    55: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    56: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    62: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+
+                },
+            },
+            king: {
+                jumpOption1: (checkSpace - 18),
+                jumpOption2: (checkSpace - 14),
+                jumpOption3: (checkSpace + 18),
+                jumpOption4: (checkSpace + 14),
+                restrictedSquares: {
+
+                    1: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: null,
+                    },
+                    3: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    5: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    7: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    8: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: null,
+                    },
+                    10: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    12: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    14: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    17: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: null,
+
+                    },
+                    23: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    24: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: null,
+                    },
+                    30: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    33: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: null,
+                    },
+                    39: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    40: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: (checkSpace + 18),
+                        jumpOption4: null,
+                    },
+                    46: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace + 14),
+                    },
+                    49: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    51: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    53: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    55: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    56: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    58: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    60: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    62: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                },
+            },
+        },
+        "red--token": {
+
+            soldier: {
+                jumpOption1: (checkSpace + 18),
+                jumpOption2: (checkSpace + 14),
+                jumpOption3: null,
+                jumpOption4: null,
+                restrictedSquares: {
+                    1: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    3: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    5: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    7: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    8: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+
+                    14: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    17: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+
+                    },
+                    23: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    24: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    30: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    33: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    39: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    40: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    46: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    49: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    51: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    53: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    55: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    49: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace - 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    55: {
+                        jumpOption1: (checkSpace - 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                },
+            },
+            king: {
+                jumpOption1: (checkSpace + 18),
+                jumpOption2: (checkSpace + 14),
+                jumpOption3: (checkSpace - 18),
+                jumpOption4: (checkSpace - 14),
+                restrictedSquares: {
+
+                    1: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    3: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    5: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    7: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    8: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    10: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    12: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    14: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: null,
+                        jumpOption4: null,
+                    },
+                    17: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace - 14),
+
+                    },
+                    23: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: null,
+                    },
+                    24: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace - 14),
+                    },
+                    30: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: null,
+                    },
+                    33: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace - 14),
+                    },
+                    39: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: null,
+                    },
+                    40: {
+                        jumpOption1: (checkSpace + 18),
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace - 14),
+                    },
+                    46: {
+                        jumpOption1: null,
+                        jumpOption2: (checkSpace + 14),
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: null,
+                    },
+                    49: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace - 14),
+                    },
+                    51: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: (checkSpace - 14),
+                    },
+                    53: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: (checkSpace - 14),
+                    },
+                    55: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: null,
+                    },
+                    56: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: null,
+                        jumpOption4: (checkSpace - 14),
+                    },
+                    58: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: (checkSpace - 14),
+                    },
+                    60: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: (checkSpace - 14),
+                    },
+                    62: {
+                        jumpOption1: null,
+                        jumpOption2: null,
+                        jumpOption3: (checkSpace - 18),
+                        jumpOption4: null,
+                    },
+                },
+            },
+        }
+    };
+    return jumpLookup;
+}
+
 
 function moveToken(e) {
     if (e.target.tagName === "P") return;
@@ -532,44 +1080,33 @@ function moveToken(e) {
     console.log(enemySquare1);
 
     //Removal of jumped piece
-    if ((newSpace === jumpCheckSpace) && (newSpace === moveOption1)) {
-        let enemySquare1Fix = enemySquare1.toString();
-        console.log(enemySquare1Fix);
-        let enemySpaceDom = document.getElementById(enemySquare1Fix);
+    if (newSpace === jumpOption1) {
+        let enemySpaceDom = document.getElementById(enemySquare1);
         enemySpaceDom.removeChild(enemySpaceDom.lastChild);
-        console.log(enemySpaceDom.childNodes);
         gameState[enemySquare1] = "";
         jumpedCheck = true;
+
     }
-    else if ((newSpace === jumpCheckSpace) && (newSpace === moveOption2)) {
-        let enemySquare2Fix = enemySquare2.toString();
-        console.log(enemySquare2Fix);
-        let enemySpaceDom = document.getElementById(enemySquare2Fix);
+    else if (newSpace === jumpOption2) {
+        let enemySpaceDom = document.getElementById(enemySquare2);
         enemySpaceDom.removeChild(enemySpaceDom.lastChild);
-        console.log(enemySpaceDom.childNodes);
         gameState[enemySquare2] = "";
         jumpedCheck = true;
     }
-    else if ((newSpace === jumpCheckSpace) && (newSpace === moveOption3)) {
-        let enemySquare3Fix = enemySquare3.toString();
-        console.log(enemySquare3Fix);
-        let enemySpaceDom = document.getElementById(enemySquare3Fix);
+    else if (newSpace === jumpOption3) {
+        let enemySpaceDom = document.getElementById(enemySquare3);
         enemySpaceDom.removeChild(enemySpaceDom.lastChild);
-        console.log(enemySpaceDom.childNodes);
         gameState[enemySquare3] = "";
         jumpedCheck = true;
     }
-    else if ((newSpace === jumpCheckSpace) && (newSpace === moveOption4)) {
-        let enemySquare4Fix = enemySquare4.toString();
-        console.log(enemySquare4Fix);
-        let enemySpaceDom = document.getElementById(enemySquare4Fix);
+    else if (newSpace === jumpOption4) {
+        let enemySpaceDom = document.getElementById(enemySquare4);
         enemySpaceDom.removeChild(enemySpaceDom.lastChild);
-        console.log(enemySpaceDom.childNodes);
         gameState[enemySquare4] = "";
         jumpedCheck = true;
     } else jumpedCheck = false;
 
-
+    //
     if (jumpedCheck = true) {
         currentSpace = newSpace;
         checkSpace = currentSpace;
@@ -578,7 +1115,7 @@ function moveToken(e) {
     };
 
     function doubleJump() {
- 
+
     }
 
 
