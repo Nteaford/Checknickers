@@ -47,12 +47,6 @@ function init() {
 function render() {
 }
 
-function determineMoveOptions() {
-    moveOption1 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption1;
-    moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption2;
-    moveOption3 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption3;
-    moveOption4 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption4;
-}
 
 
 init();
@@ -69,28 +63,28 @@ function moveCalculator(e) {
     currentSpace = parseInt(currentSpace = e.target.parentElement.getAttribute("id"));
     //set checkSpace variable;
     checkSpace = currentSpace;
-
+    
     //collect tokenId
     tokenId = e.target.getAttribute(("id"));
     // console.log(tokenId);
-
+    
     //create moveLookup Object
     let moveLookup = moveLookupFunction(checkSpace);
-
+    
     //Player Turn Check
     if (tokenTeamSelected !== playerTurn.tokenUsed) {
         return;
     };
-
-
-
-
-
-
-
+    
     //determine moveOptions
     determineMoveOptions();
     // console.log(`MC: you are at ${checkSpace}`);
+    function determineMoveOptions() {
+        moveOption1 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption1;
+        moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption2;
+        moveOption3 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption3;
+        moveOption4 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption4;
+    }
     // console.log(`MC: you can move to ${moveOption1}`);
     // console.log(`MC: you can move2 to ${moveOption2}`);
     // console.log(`MC: you can move3 to ${moveOption3}`);
@@ -580,13 +574,10 @@ function moveToken(e) {
         currentSpace = newSpace;
         checkSpace = currentSpace;
         moveLookup = moveLookupFunction(checkSpace);
-        determineMoveOptions();
-
 
     };
 
     function doubleJump() {
-        moveCalculator(currentSpace);
  
     }
 
