@@ -67,11 +67,16 @@ function moveCalculator(e) {
         return;
     };
 
+
+
+    determineMoveOptions();
     //determine moveOptions
-    moveOption1 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption1;
-    moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption2;
-    moveOption3 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption3;
-    moveOption4 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption4;
+    function determineMoveOptions() {
+        moveOption1 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption1;
+        moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption2;
+        moveOption3 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption3;
+        moveOption4 = moveLookup[tokenTeamSelected][tokenRankSelected].moveOption4;
+    }
     // console.log(`MC: you are at ${checkSpace}`);
     // console.log(`MC: you can move to ${moveOption1}`);
     // console.log(`MC: you can move2 to ${moveOption2}`);
@@ -83,9 +88,10 @@ function moveCalculator(e) {
 
     jumpCheck();
 
+    //NEED TO SET GUARDRAILS ON JUMPING INTO CORNERS
+
     function jumpCheck() {
         if (gameState[moveOption1] === playerTurn.opponentToken) {
-            console.log(`This is checkSpace ${checkSpace}`);
             enemySquare1 = moveOption1;
             checkSpace = moveOption1;
 
@@ -100,7 +106,6 @@ function moveCalculator(e) {
             }
         };
         if (gameState[moveOption2] === playerTurn.opponentToken) {
-            console.log(`This is checkSpace ${checkSpace}`);
             enemySquare2 = moveOption2;
             checkSpace = moveOption2;
 
@@ -115,7 +120,6 @@ function moveCalculator(e) {
             }
         };
         if (gameState[moveOption3] === playerTurn.opponentToken) {
-            console.log(`This is checkSpace ${checkSpace}`);
             enemySquare3 = moveOption3;
             checkSpace = moveOption3;
 
@@ -130,7 +134,6 @@ function moveCalculator(e) {
             }
         };
         if (gameState[moveOption4] === playerTurn.opponentToken) {
-            console.log(`This is checkSpace ${checkSpace}`);
             enemySquare4 = moveOption4;
             checkSpace = moveOption4;
 
@@ -145,18 +148,24 @@ function moveCalculator(e) {
             }
         };
     };
+
+
     // console.log(`This is checkSpace ${checkSpace}`);
     // console.log(`This is moveOption1 ${moveOption1}`);
 
     // console.log(`This is jumpCheckSpace ${jumpCheckSpace}`);
 
+
+    determineMoveRestrictions();
     //determine movement restrictions
-    let restrictedCheck = currentSpace;
-    if (moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck]) {
-        moveOption1 = moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck].moveOption1;
-        moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck].moveOption2;
-        moveOption3 = moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck].moveOption3;
-        moveOption4 = moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck].moveOption4;
+    function determineMoveRestrictions() {
+        let restrictedCheck = currentSpace;
+        if (moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck]) {
+            moveOption1 = moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck].moveOption1;
+            moveOption2 = moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck].moveOption2;
+            moveOption3 = moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck].moveOption3;
+            moveOption4 = moveLookup[tokenTeamSelected][tokenRankSelected].restrictedSquares[restrictedCheck].moveOption4;
+        }
         // console.log(`MC: updated move ${moveOption1}`);
         // console.log(`MC: updated move2 ${moveOption2}`);
         // console.log(`MC: updated move3 ${moveOption3}`);
@@ -164,38 +173,41 @@ function moveCalculator(e) {
     };
 
 
-
+    determineTeamBlock();
     //Team Block Check
-    if (gameState[moveOption1] === playerTurn.tokenUsed) {
-        moveOption1 = null;
-    };
-    if (gameState[moveOption2] === playerTurn.tokenUsed) {
-        moveOption2 = null;
-    };
-    if (gameState[moveOption3] === playerTurn.tokenUsed) {
-        moveOption1 = null;
-    };
-    if (gameState[moveOption4] === playerTurn.tokenUsed) {
-        moveOption2 = null;
+    function determineTeamBlock() {
+        if (gameState[moveOption1] === playerTurn.tokenUsed) {
+            moveOption1 = null;
+        };
+        if (gameState[moveOption2] === playerTurn.tokenUsed) {
+            moveOption2 = null;
+        };
+        if (gameState[moveOption3] === playerTurn.tokenUsed) {
+            moveOption1 = null;
+        };
+        if (gameState[moveOption4] === playerTurn.tokenUsed) {
+            moveOption2 = null;
+        };
+
+        //Board Block Check
+        if (moveOption1 < 0 || moveOption1 > 63) {
+            moveOption1 = null;
+        };
+        if (moveOption2 < 0 || moveOption2 > 63) {
+            moveOption2 = null;
+        };
+        if (moveOption3 < 0 || moveOption3 > 63) {
+            moveOption3 = null;
+        };
+        if (moveOption4 < 0 || moveOption4 > 63) {
+            moveOption4 = null;
+        };
     };
 
-    //Board Block Check
-    if (moveOption1 < 0 || moveOption1 > 63) {
-        moveOption1 = null;
-    };
-    if (moveOption2 < 0 || moveOption2 > 63) {
-        moveOption2 = null;
-    };
-    if (moveOption3 < 0 || moveOption3 > 63) {
-        moveOption3 = null;
-    };
-    if (moveOption4 < 0 || moveOption4 > 63) {
-        moveOption4 = null;
-    };
 
-
-
+    displayMoveOptions();
     //display move options on board
+    function displayMoveOptions() {
     if (moveOption1 !== null) {
         let moveOption1Display = moveOption1.toString();
         document.getElementById(moveOption1Display).classList.add("potentialMove");
@@ -212,11 +224,16 @@ function moveCalculator(e) {
         let moveOption4Display = moveOption4.toString();
         document.getElementById(moveOption4Display).classList.add("potentialMove");
     };
+    };
+
+    // jumpCheck();
+    // displayMoveOptions();
 
     const moveSetup = document.querySelectorAll(".potentialMove");
     for (let i = 0; i < moveSetup.length; i++) {
         moveSetup[i].addEventListener("click", moveToken)
     };
+
 
 };
 
@@ -354,6 +371,12 @@ function moveLookupFunction(checkSpace) {
                 moveOption3: null,
                 moveOption4: null,
                 restrictedSquares: {
+                    7: {
+                        moveOption1: null,
+                        moveOption2: (checkSpace + 7),
+                        moveOption3: null,
+                        moveOption4: null,
+                    },
                     8: {
                         moveOption1: (checkSpace + 9),
                         moveOption2: null,
@@ -495,7 +518,7 @@ function moveToken(e) {
     console.log(jumpCheckSpace);
     console.log(enemySquare1);
 
-//Removal of jumped piece
+    //Removal of jumped piece
     if ((newSpace === jumpCheckSpace) && (newSpace === moveOption1)) {
         let enemySquare1Fix = enemySquare1.toString();
         console.log(enemySquare1Fix);
@@ -527,43 +550,22 @@ function moveToken(e) {
         enemySpaceDom.removeChild(enemySpaceDom.lastChild);
         console.log(enemySpaceDom.childNodes);
         gameState[enemySquare4] = "";
-
-
-    // let enemySquare2Fix = enemySquare2.toString();
-    // console.log(enemySquare2Fix);
-    // let enemySpaceDom = document.getElementById(enemySquare2Fix);
-    // enemySpaceDom.removeChild(enemySpaceDom.firstChild);
-    // console.log(enemySpaceDom.childNodes);
-    // gameState[enemySquare2] = "";
-
-    // let enemySquare1Fix = enemySquare3.toString();
-    // console.log(enemySquare3Fix);
-    // let enemySpaceDom = document.getElementById(enemySquare3Fix);
-    // enemySpaceDom.removeChild(enemySpaceDom.firstChild);
-    // console.log(enemySpaceDom.childNodes);
-    // gameState[enemySquare3] = "";
-
-    // let enemySquare4Fix = enemySquare4.toString();
-    // console.log(enemySquare1Fix);
-    // let enemySpaceDom = document.getElementById(enemySquare4Fix);
-    // enemySpaceDom.removeChild(enemySpaceDom.firstChild);
-    // console.log(enemySpaceDom.childNodes);
-    // gameState[enemySquare4] = "";
-};
+    };
 
 
 
 
-if (playerTurn === blkTurnLookup) { playerTurn = redTurnLookup } else {
-    playerTurn = blkTurnLookup
-};
 
-// tokenTrackingReset();
+    if (playerTurn === blkTurnLookup) { playerTurn = redTurnLookup } else {
+        playerTurn = blkTurnLookup
+    };
 
-const moveEventRemove = document.querySelectorAll(".potentialMove");
-for (let i = 0; i < moveEventRemove.length; i++) {
-    moveEventRemove[i].removeEventListener("click", moveToken)
-};
+    tokenTrackingReset();
+
+    const moveEventRemove = document.querySelectorAll(".potentialMove");
+    for (let i = 0; i < moveEventRemove.length; i++) {
+        moveEventRemove[i].removeEventListener("click", moveToken)
+    };
 
 
 };
