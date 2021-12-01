@@ -1100,7 +1100,5 @@ function moveToken(e) {
 
     //win condition text
     if (!gameState.some(x => x === "black--token"))  winTextEl.innerText = "Red Wins!";
-    winTextEl.style.color = "red"
     if (!gameState.some(x => x === "red--token")) winTextEl.innerText = "Black Wins!";
-    winTextEl.style.color = "black"
 };

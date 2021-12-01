@@ -1,6 +1,92 @@
 # Checknickers
-The repo for my checkers game
+## Welcome to Checknickers - a simplified version of the true "Game of Kings"
+---
 
+## Checknickers is based off of checkers, with a couple of rule modifications.
+
+## Traditional Checkers Rules: 
+
+> Game Pieces and Board 
+>
+> - Checkers is a board game played between two people on an 8x8 checked board. 
+> - Each player has a team, and each team has 12 pieces that fit inside each of the boxes on the board. The pieces are placed on every other dark square and then staggered by rows. 
+> - The player's teams have different colored pieces from each other.
+>
+> Taking a Turn 
+> - The darker color pieces moves first. Each player takes their turn by moving a piece. Pieces are always moved diagonally and can be moved in the following ways:
+> - Diagonally in the forward direction (towards the opponent) to the next dark square.
+> - If there is an opponent's piece in your diagonal-forward direction, and an empty space on the other side (in that same diagonal-forward direction), you jump/capture your opponent and remove their piece. You can do multiple jump/captures if they are lined up in the forward direction.
+> - If you have a jump/capture, you have no choice but to take it.
+>
+> King Pieces:
+> - The last row is called the king row. If you get a piece across the board to the opponent's king row, that piece becomes a king. Another piece is placed onto that piece so it is now two pieces high. King pieces can move (and jump/capture) in both directions, forward and backward. 
+> - Once a piece is kinged, the player must wait until the next turn to jump out of the king row. 
+>
+> Winning the Game 
+> - You win the game when the opponent has no more pieces or can't move (even if he/she still has pieces). If neither player can move then it is a draw or a tie. 
+>
+
+## Checknickers Rules:
+Game Pieces and Board 
+- Checknickers is a board game played between two people on an 8x8 checked board. 
+- Each player has a team, and each team has 12 pieces that fit inside each of the boxes on the board. The pieces are placed on every other dark square and then staggered by rows. 
+- The player's teams have different colored pieces from each other.
+
+Taking a Turn 
+- Black Team moves first. Each player takes their turn by moving a piece. Pieces are always moved diagonally and can be moved in the following ways:
+- Diagonally in the forward direction (towards the opponent) to the next dark square.
+- If there is an opponent's piece in your diagonal-forward direction, and an empty space on the other side (in that same diagonal-forward direction), you jump/capture your opponent and remove their piece. ~~You can do multiple jump/captures if they are lined up in the forward direction.~~
+- ~~If you have a jump/capture, you have no choice but to take it.~~
+
+King Pieces:
+- The last row is called the king row. If you get a piece across the board to the opponent's king row, that piece becomes a king. ~~Another piece is placed onto that piece so it is now two pieces high.~~ King pieces can move (and jump/capture) in both directions, forward and backward. 
+- Once a piece is kinged, the player must wait until the next turn to jump out of the king row. 
+
+Winning the Game 
+- You win the game when the opponent has no more pieces ~~or can't move (even if he/she still has pieces)~~. ~~If neither player can move then it is a draw or a tie.~~
+
+---
+
+## Screenshots (Gameplay Examples):
+![Gameboard Screenshot](https://i.imgur.com/AvCZkPF.png)
+Mid-game view
+
+![Gameboard Screenshot2](https://i.imgur.com/eeekPUp.png)
+Red Queen Movement Options
+
+![Gameboard Screenshot3](https://i.imgur.com/lsglsCe.png)
+Red Wins!
+
+---
+
+## Technologies Used
+- HTML
+- CSS
+- JS
+- Chrome Browser (troubleshooting, rendering code changes )
+- VS Code (code editor)
+
+## Getting Started
+- You can link to the game [here.](https://nteaford.github.io/Checknickers/)
+- Make sure you read the rules ABOVE!
+
+- Black Team will begin -- click on a black token to view movement options (make sure you're not blocked by your own team!).
+- Yellow squares will indicate where you can move. If you don't love your movement options, go ahead and select another black token.
+- When you've made your movement decision, click on the desired yellow square to move your token to that square. Once you do, it will be the Red Team's turn. 
+- Red Team operates in the same way as the Black Team, outlined above.
+
+---
+
+## Next Steps/Icebox Items
+
+- [ ] Add Mandatory Capture
+- [ ] Add Double-Jump/Capture Functionality
+- [ ] Add Triple-Jump Functionality
+- [x] Become the World Champion Checknickers Player
+
+---
+
+## Pseudocode and Logic Dump for my Game
 
 Commonspeak for how checkers is going to work:
 
